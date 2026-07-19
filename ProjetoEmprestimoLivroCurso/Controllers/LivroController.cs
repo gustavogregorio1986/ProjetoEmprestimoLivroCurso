@@ -1,12 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjetoEmprestimoLivroCurso.Models;
+using ProjetoEmprestimoLivroCurso.Services.LivroService;
 
 namespace ProjetoEmprestimoLivroCurso.Controllers
 {
     public class LivroController : Controller
     {
-        public IActionResult Index()
+        private readonly ILivroInterface _livroInterface;
+
+        public LivroController(ILivroInterface livroInterface)
         {
-            return View();
+            this._livroInterface = livroInterface;
+        }
+
+        public async Task<ActionResult<List<LivroModel>>> Index()
+        {
+            var livros = await _livroInterface.BuscarLivros();
+            return View(livros);
         }
     }
 }
