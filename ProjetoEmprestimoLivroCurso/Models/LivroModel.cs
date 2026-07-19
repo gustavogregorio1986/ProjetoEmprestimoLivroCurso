@@ -14,7 +14,7 @@ namespace ProjetoEmprestimoLivroCurso.Models
         public string Capa { get; set; } = string.Empty;
         [Required]
         public string ISBN { get; set; } = string.Empty;
-
+        [Required]
         public string Autor { get; set; } = string.Empty;
         [Required]
         public string Genero { get; set; } = string.Empty;
