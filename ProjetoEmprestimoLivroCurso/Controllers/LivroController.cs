@@ -18,5 +18,11 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
             var livros = await _livroInterface.BuscarLivros();
             return View(livros);
         }
+
+        [HttpGet]
+        public ActionResult Cadastrar()
+        {
+            return View();
+        }
     }
 }
