@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ProjetoEmprestimoLivroCurso.Data;
 using ProjetoEmprestimoLivroCurso.Dto;
 using ProjetoEmprestimoLivroCurso.Models;
@@ -9,11 +10,14 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
     {
         private readonly AppDbContext _context;
         private string _caminhoServidor;
+        private IMapper _mapper;
 
-        public LivroService(AppDbContext context, IWebHostEnvironment sistema)
+        public LivroService(AppDbContext context, IWebHostEnvironment sistema, IMapper mapper)
         {
             _context = context;
             _caminhoServidor = Path.Combine(sistema.WebRootPath, "imagem");
+            _mapper = mapper;
+
 
             // garante que a pasta exista
             if (!Directory.Exists(_caminhoServidor))
@@ -35,40 +39,23 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
             }
         }
 
-        public async Task<LivroModel> Cadastrar(LivroCriacaoDto livroCriacaoDto, IFormFile foto)
+        public async Task<LivroModel> Cadastrar(LivroCriacaoDto dto, IFormFile foto)
         {
-            try
+            string nomeArquivo = Guid.NewGuid().ToString() + Path.GetExtension(foto.FileName);
+            string caminho = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagem", nomeArquivo);
+
+            using (var stream = new FileStream(caminho, FileMode.Create))
             {
-                var nomeArquivo = Guid.NewGuid().ToString() + Path.GetExtension(foto.FileName);
-                var caminhoCompleto = Path.Combine(_caminhoServidor, nomeArquivo);
-
-                using (var stream = new FileStream(caminhoCompleto, FileMode.Create))
-                {
-                    await foto.CopyToAsync(stream);
-                }
-
-                var livro = new LivroModel
-                {
-                    Titulo = livroCriacaoDto.Titulo,
-                    Autor = livroCriacaoDto.Autor,
-                    QuatidadeEmEstoque = livroCriacaoDto.QuatidadeEmEstoque,
-                    Descricao = livroCriacaoDto.Descricao,
-                    AnoPublicacao = livroCriacaoDto.AnoPublicacao,
-                    ISBN = livroCriacaoDto.ISBN,
-                    Genero = livroCriacaoDto.Genero,
-                    // caminho público para exibir no navegador
-                    Capa = "/imagem/" + nomeArquivo
-                };
-
-                _context.Add(livro);
-                await _context.SaveChangesAsync();
-
-                return livro;
+                await foto.CopyToAsync(stream);
             }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            var livro = _mapper.Map<LivroModel>(dto);
+            livro.Capa = "/imagem/" + nomeArquivo; // caminho público
+
+            _context.Add(livro);
+            await _context.SaveChangesAsync();
+
+            return livro;
         }
 
         public bool VerificaSeJaExisteCadastro(LivroCriacaoDto livroCriacaoDto)
