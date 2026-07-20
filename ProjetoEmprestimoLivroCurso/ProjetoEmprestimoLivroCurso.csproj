@@ -21,4 +21,9 @@
     <PackageReference Include="System.Security.Principal.Windows" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="imagem\" />
+    <Folder Include="wwwroot\imagem\" />
+  </ItemGroup>
+
 </Project>
