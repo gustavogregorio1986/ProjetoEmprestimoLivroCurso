@@ -76,12 +76,7 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
             try
             {
                 var livroBanco = _context.Livros.FirstOrDefault(livro => livro.ISBN == livroCriacaoDto.ISBN);
-                if(livroBanco != null)
-                {
-                    return false;
-                }
-
-                return true;
+                return livroBanco != null;
 
             }
             catch(Exception ex)

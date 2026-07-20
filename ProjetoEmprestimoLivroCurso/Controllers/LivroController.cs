@@ -33,22 +33,26 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if(!_livroInterface.VerificaSeJaExisteCadastro(livroCriacaoDto))
+                    if(_livroInterface.VerificaSeJaExisteCadastro(livroCriacaoDto))
                     {
+                        TempData["MensagemErro"] = "Código ISBN já cadastrado";
                         return View(livroCriacaoDto);
                     }
 
                     var livro = await _livroInterface.Cadastrar(livroCriacaoDto, foto);
 
+                    TempData["MensagemSucesso"] = "Livro Cadastrado com sucesso!";
                     return RedirectToAction("Index");
                 }
                 else
                 {
+                    TempData["MensagemErro"] = "Verifique os dados novamente!";
                     return View(livroCriacaoDto);
                 }
             }
             else
             {
+                TempData["MensagemErro"] = "Incluir uma imagem de capa!";
                 return View(livroCriacaoDto);
             }
         }
