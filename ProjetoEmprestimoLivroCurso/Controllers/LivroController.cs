@@ -26,6 +26,14 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Detalhes(int id)
+        {
+            var livro = await _livroInterface.BuscarLivroPorId(id);
+            Console.WriteLine($"Capa recebida: {livro.Capa}");
+            return View(livro);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Cadastrar(LivroCriacaoDto livroCriacaoDto, IFormFile foto)
         {

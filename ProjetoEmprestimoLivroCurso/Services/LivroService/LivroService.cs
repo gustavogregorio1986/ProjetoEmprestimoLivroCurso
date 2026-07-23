@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.EntityFrameworkCore;
 using ProjetoEmprestimoLivroCurso.Data;
 using ProjetoEmprestimoLivroCurso.Dto;
@@ -23,6 +24,21 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
             if (!Directory.Exists(_caminhoServidor))
             {
                 Directory.CreateDirectory(_caminhoServidor);
+            }
+        }
+
+        public async Task<LivroModel> BuscarLivroPorId(int? id)
+        {
+            try
+            {
+                var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Id == id);
+
+                return livro;
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
