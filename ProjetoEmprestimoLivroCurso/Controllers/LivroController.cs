@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using ProjetoEmprestimoLivroCurso.Dto;
 using ProjetoEmprestimoLivroCurso.Models;
 using ProjetoEmprestimoLivroCurso.Services.LivroService;
@@ -8,10 +9,12 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
     public class LivroController : Controller
     {
         private readonly ILivroInterface _livroInterface;
+        private readonly IMapper _mapper;
 
-        public LivroController(ILivroInterface livroInterface)
+        public LivroController(ILivroInterface livroInterface, IMapper mapper)
         {
-            this._livroInterface = livroInterface;
+            _livroInterface = livroInterface;
+            _mapper = mapper;
         }
 
         public async Task<ActionResult<List<LivroModel>>> Index()
@@ -30,9 +33,22 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
         public async Task<ActionResult> Detalhes(int id)
         {
             var livro = await _livroInterface.BuscarLivroPorId(id);
-            Console.WriteLine($"Capa recebida: {livro.Capa}");
             return View(livro);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Editar(int id)
+        {
+            var livro = await _livroInterface.BuscarLivroPorId(id);
+
+            if (livro == null)
+                return RedirectToAction("Index");
+
+            var livroEdicaoDto = _mapper.Map<LivroEdicaoDto>(livro);
+            livroEdicaoDto.Capa = livro.Capa;
+            return View(livroEdicaoDto); // precisa passar o DTO aqui
+        }
+
 
         [HttpPost]
         public async Task<ActionResult> Cadastrar(LivroCriacaoDto livroCriacaoDto, IFormFile foto)

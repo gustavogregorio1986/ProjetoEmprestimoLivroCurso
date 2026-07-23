@@ -27,7 +27,7 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
             }
         }
 
-        public async Task<LivroModel> BuscarLivroPorId(int? id)
+        public async Task<LivroModel> BuscarLivroPorId(int id)
         {
             try
             {

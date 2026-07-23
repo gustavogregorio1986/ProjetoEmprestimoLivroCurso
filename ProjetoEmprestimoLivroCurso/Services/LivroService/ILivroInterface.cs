@@ -11,6 +11,6 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
 
         Task<LivroModel> Cadastrar(LivroCriacaoDto livroCriacaoDto, IFormFile foto);
 
-        Task<LivroModel> BuscarLivroPorId(int? id);
+        Task<LivroModel> BuscarLivroPorId(int id);
     }
 }
