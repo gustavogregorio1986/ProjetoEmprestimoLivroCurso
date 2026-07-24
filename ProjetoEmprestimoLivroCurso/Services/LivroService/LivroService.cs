@@ -57,20 +57,40 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
 
         public async Task<LivroModel> Cadastrar(LivroCriacaoDto dto, IFormFile foto)
         {
-            string nomeArquivo = Guid.NewGuid().ToString() + Path.GetExtension(foto.FileName);
-            string caminho = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagem", nomeArquivo);
-
-            using (var stream = new FileStream(caminho, FileMode.Create))
-            {
-                await foto.CopyToAsync(stream);
-            }
-
             var livro = _mapper.Map<LivroModel>(dto);
-            livro.Capa = "/imagem/" + nomeArquivo; // caminho público
+
+            livro.Capa = await GerarCaminhoArquivoAsync(foto);
 
             _context.Add(livro);
             await _context.SaveChangesAsync();
 
+            return livro;
+        }
+
+        public async Task<LivroModel> Editar(LivroEdicaoDto dto, IFormFile foto)
+        {
+            var livro = await _context.Livros.FirstOrDefaultAsync(l => l.Id == dto.Id);
+            if (livro == null)
+                return null;
+
+            _mapper.Map(dto, livro);
+
+            if (foto != null)
+            {
+                // só tenta deletar se houver capa antiga
+                if (!string.IsNullOrEmpty(livro.Capa))
+                {
+                    var caminhoAntigo = Path.Combine(_caminhoServidor, Path.GetFileName(livro.Capa));
+                    if (File.Exists(caminhoAntigo))
+                        File.Delete(caminhoAntigo);
+                }
+
+                // gera nova capa
+                livro.Capa = await GerarCaminhoArquivoAsync(foto);
+            }
+
+            _context.Update(livro);
+            await _context.SaveChangesAsync();
             return livro;
         }
 
@@ -87,5 +107,27 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
                 throw new Exception(ex.Message);
             }
         }
+
+        private async Task<string> GerarCaminhoArquivoAsync(IFormFile foto)
+        {
+            if (foto == null || foto.Length == 0)
+                return null;
+
+            // Gera nome único
+            string nomeArquivo = Guid.NewGuid().ToString() + Path.GetExtension(foto.FileName);
+
+            // Caminho físico no servidor
+            string caminhoFisico = Path.Combine(_caminhoServidor, nomeArquivo);
+
+            // Salva o arquivo
+            using (var stream = new FileStream(caminhoFisico, FileMode.Create))
+            {
+                await foto.CopyToAsync(stream);
+            }
+
+            // Retorna o caminho público (para ser usado no navegador)
+            return "/imagem/" + nomeArquivo;
+        }
+
     }
 }

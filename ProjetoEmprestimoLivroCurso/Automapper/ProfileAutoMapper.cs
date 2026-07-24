@@ -12,6 +12,7 @@ namespace ProjetoEmprestimoLivroCurso.AutoMapper
         {
             CreateMap<LivroCriacaoDto, LivroModel>();
             CreateMap<LivroModel, LivroEdicaoDto>();
+            CreateMap<LivroEdicaoDto, LivroModel>();
 
         }
     }
