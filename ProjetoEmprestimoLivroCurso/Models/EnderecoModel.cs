@@ -12,6 +12,8 @@ namespace ProjetoEmprestimoLivroCurso.Models
         [Required]
         public int Numero { get; set; }
         [Required]
+        public string Bairro { get; set; }
+        [Required]
         public string CEP { get; set; } = string.Empty;
         [Required]
         public string Estado { get; set; } = string.Empty;

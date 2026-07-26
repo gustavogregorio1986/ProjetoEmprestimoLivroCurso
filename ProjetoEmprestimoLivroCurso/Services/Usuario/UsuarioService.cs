@@ -19,18 +19,24 @@ namespace ProjetoEmprestimoLivroCurso.Services.Usuario
             {
                 var registros = new List<UsuarioModel>();
 
-                if(id != null)
+                if (id != null)
                 {
-                    registros = await _context.Usuarios.Where(cliente => cliente.Perfil == 0).Include(e => e.Endereco).ToListAsync();
+                    registros = await _context.Usuarios
+                        .Where(cliente => cliente.Perfil == 0)
+                        .Include(e => e.Endereco)
+                        .ToListAsync();
                 }
                 else
                 {
-                    registros = await _context.Usuarios.Where(cliente => cliente.Perfil != 0).Include(e => e.Endereco).ToListAsync();
+                    registros = await _context.Usuarios
+                        .Where(cliente => cliente.Perfil != 0)
+                        .Include(e => e.Endereco)
+                        .ToListAsync();
                 }
 
                 return registros;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
