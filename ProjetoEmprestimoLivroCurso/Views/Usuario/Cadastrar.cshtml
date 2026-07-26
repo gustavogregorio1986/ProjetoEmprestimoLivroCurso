@@ -1,0 +1,23 @@
+﻿@using ProjetoEmprestimoLivroCurso.Enum
+
+@{
+    PerfilEnum? perfil = null;
+    if (ViewBag.Perfil != null)
+    {
+        PerfilEnum parsed;
+        if (Enum.TryParse(ViewBag.Perfil.ToString(), out parsed))
+        {
+            perfil = parsed;
+        }
+    }
+}
+
+@if (perfil == PerfilEnum.Cliente)
+{
+    <p>Cliente</p>
+}
+
+@if (perfil == PerfilEnum.Administrador)
+{
+    <p>Administrador</p>
+}

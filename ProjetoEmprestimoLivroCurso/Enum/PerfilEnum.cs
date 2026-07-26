@@ -2,7 +2,7 @@
 {
     public enum PerfilEnum
     {
-        Adminsitrador = 1,
+        Administrador = 1,
         Cliente = 0
     }
 }

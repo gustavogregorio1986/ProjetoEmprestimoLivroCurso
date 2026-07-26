@@ -17,6 +17,7 @@ namespace ProjetoEmprestimoLivroCurso.Models
         public bool Situacao { get; set; } = true;
         [Required]
         public PerfilEnum Perfil { get; set; }
+        [Required]
         public TurnoEnum Turno { get; set; }
         [Required]
         public byte[] SenhaHash { get; set; }

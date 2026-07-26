@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ProjetoEmprestimoLivroCurso.Dto
+namespace ProjetoEmprestimoLivroCurso.Dto.Livro
 {
     public class LivroEdicaoDto
     {

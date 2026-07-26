@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ProjetoEmprestimoLivroCurso.Dto;
+using ProjetoEmprestimoLivroCurso.Dto.Livro;
 using ProjetoEmprestimoLivroCurso.Models;
 using ProjetoEmprestimoLivroCurso.Services.LivroService;
 
