@@ -1,4 +1,5 @@
 ﻿using ProjetoEmprestimoLivroCurso.Dto.Livro;
+using ProjetoEmprestimoLivroCurso.Dto.Usuario;
 using ProjetoEmprestimoLivroCurso.Models;
 
 namespace ProjetoEmprestimoLivroCurso.Services.LivroService
@@ -13,5 +14,7 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
 
         Task<LivroModel> BuscarLivroPorId(int id);
         Task<LivroModel> Editar(LivroEdicaoDto livroEdicaoDto, IFormFile foto);
+
+        Task<bool> VerificaSeExisteUsuarioEEmail(UsuarioCriacaoDto usuarioCriacaoDto)~;
     }
 }

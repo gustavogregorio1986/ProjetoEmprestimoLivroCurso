@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjetoEmprestimoLivroCurso.Dto.Usuario;
 using ProjetoEmprestimoLivroCurso.Enum;
 using ProjetoEmprestimoLivroCurso.Services.Usuario;
 
@@ -30,6 +31,31 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
             }
 
             return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Cadastrar(UsuarioCriacaoDto usuarioCriacaoDto)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _usuarioInterface.VerificaSeExisteUsuarioEEmail(usuarioCriacaoDto))
+                {
+                    TempData["MensagemErro"] = "Já existe email/usuário cadastrado!";
+                    return View(usuarioCriacaoDto);
+                }
+
+                var usuario = await _usuarioInterface.Cadastrar(usuarioCriacaoDto);
+                TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
+
+                if (usuario.Perfil != PerfilEnum.Cliente)
+                {
+                    return RedirectToAction("Index", "Funcionario");
+                }
+
+                return RedirectToAction("Index", "Cliente", new { Id = "0" });
+            }
+
+            return View(usuarioCriacaoDto);
         }
     }
 }

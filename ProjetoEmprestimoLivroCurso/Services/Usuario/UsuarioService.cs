@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProjetoEmprestimoLivroCurso.Data;
+using ProjetoEmprestimoLivroCurso.Dto.Usuario;
 using ProjetoEmprestimoLivroCurso.Models;
 
 namespace ProjetoEmprestimoLivroCurso.Services.Usuario
@@ -37,6 +38,31 @@ namespace ProjetoEmprestimoLivroCurso.Services.Usuario
                 return registros;
             }
             catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public Task<UsuarioCriacaoDto> Cadastrar(UsuarioCriacaoDto usuarioCriacaoDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> VerificaSeExisteUsuarioEEmail(UsuarioCriacaoDto usuarioCriacaoDto)
+        {
+            try
+            {
+                var mesmoUsuario = await _context.Usuarios.FirstOrDefaultAsync(usuarioBanco => usuarioBanco.Email == usuarioCriacaoDto.Email || usuarioBanco.Usuario == usuarioCriacaoDto.Usuario);
+
+                if(mesmoUsuario == null)
+                {
+                    return true;
+                }
+
+                return false;
+
+            }
+            catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
