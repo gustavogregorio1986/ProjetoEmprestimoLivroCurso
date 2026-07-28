@@ -15,6 +15,5 @@ namespace ProjetoEmprestimoLivroCurso.Services.LivroService
         Task<LivroModel> BuscarLivroPorId(int id);
         Task<LivroModel> Editar(LivroEdicaoDto livroEdicaoDto, IFormFile foto);
 
-        Task<bool> VerificaSeExisteUsuarioEEmail(UsuarioCriacaoDto usuarioCriacaoDto)~;
     }
 }

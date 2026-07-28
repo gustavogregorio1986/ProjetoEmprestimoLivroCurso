@@ -38,15 +38,19 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _usuarioInterface.VerificaSeExisteUsuarioEEmail(usuarioCriacaoDto))
+                // Verifica se já existe usuário ou email
+                bool existe = await _usuarioInterface.VerificaSeExisteUsuarioEEmail(usuarioCriacaoDto);
+                if (existe)
                 {
                     TempData["MensagemErro"] = "Já existe email/usuário cadastrado!";
                     return View(usuarioCriacaoDto);
                 }
 
+                // Cadastra usuário
                 var usuario = await _usuarioInterface.Cadastrar(usuarioCriacaoDto);
                 TempData["MensagemSucesso"] = "Cadastro realizado com sucesso!";
 
+                // Redireciona conforme perfil
                 if (usuario.Perfil != PerfilEnum.Cliente)
                 {
                     return RedirectToAction("Index", "Funcionario");
@@ -55,6 +59,7 @@ namespace ProjetoEmprestimoLivroCurso.Controllers
                 return RedirectToAction("Index", "Cliente", new { Id = "0" });
             }
 
+            // Se o ModelState não for válido, retorna para a view com os dados
             return View(usuarioCriacaoDto);
         }
     }
